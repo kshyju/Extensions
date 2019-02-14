@@ -53,7 +53,7 @@ namespace Microsoft.Extensions.Configuration.Json
             => string.Format(CultureInfo.CurrentCulture, GetString("Error_KeyIsDuplicated"), p0);
 
         /// <summary>
-        /// Unsupported JSON token '{0}' was found. Path '{1}', line {2} position {3}.
+        /// Unsupported JSON token '{0}' was found.
         /// </summary>
         internal static string Error_UnsupportedJSONToken
         {
@@ -61,10 +61,10 @@ namespace Microsoft.Extensions.Configuration.Json
         }
 
         /// <summary>
-        /// Unsupported JSON token '{0}' was found. Path '{1}', line {2} position {3}.
+        /// Unsupported JSON token '{0}' was found.
         /// </summary>
-        internal static string FormatError_UnsupportedJSONToken(object p0, object p1, object p2, object p3)
-            => string.Format(CultureInfo.CurrentCulture, GetString("Error_UnsupportedJSONToken"), p0, p1, p2, p3);
+        internal static string FormatError_UnsupportedJSONToken(object p0)
+            => string.Format(CultureInfo.CurrentCulture, GetString("Error_UnsupportedJSONToken"), p0);
 
         private static string GetString(string name, params string[] formatterNames)
         {

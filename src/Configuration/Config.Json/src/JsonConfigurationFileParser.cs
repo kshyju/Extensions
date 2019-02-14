@@ -27,6 +27,10 @@ namespace Microsoft.Extensions.Configuration.Json
             using (var reader = new StreamReader(input))
             using (JsonDocument doc = JsonDocument.Parse(reader.ReadToEnd(), new JsonReaderOptions { CommentHandling = JsonCommentHandling.Skip }))
             {
+                if (doc.RootElement.Type != JsonValueType.Object)
+                {
+                    throw new FormatException(Resources.FormatError_UnsupportedJSONToken(doc.RootElement.Type));
+                }
                 VisitElement(doc.RootElement);
             }
 
@@ -73,12 +77,7 @@ namespace Microsoft.Extensions.Configuration.Json
                     break;
 
                 default:
-                // TODO:
-                    throw new FormatException(Resources.FormatError_UnsupportedJSONToken(
-                        value.Type,
-                        "Path",
-                        "LineNumber",
-                        "LinePosition"));
+                    throw new FormatException(Resources.FormatError_UnsupportedJSONToken(value.Type));
             }
         }
 

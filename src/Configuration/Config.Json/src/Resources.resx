@@ -127,6 +127,6 @@
     <value>A duplicate key '{0}' was found.</value>
   </data>
   <data name="Error_UnsupportedJSONToken" xml:space="preserve">
-    <value>Unsupported JSON token '{0}' was found. Path '{1}', line {2} position {3}.</value>
+    <value>Unsupported JSON token '{0}' was found.</value>
   </data>
 </root>
