@@ -24,7 +24,8 @@ namespace Microsoft.Extensions.Configuration.Json
         {
             _data.Clear();
 
-            using (JsonDocument doc = JsonDocument.Parse(input, new JsonReaderOptions { CommentHandling = JsonCommentHandling.Skip }))
+            using (var reader = new StreamReader(input))
+            using (JsonDocument doc = JsonDocument.Parse(reader.ReadToEnd(), new JsonReaderOptions { CommentHandling = JsonCommentHandling.Skip }))
             {
                 VisitElement(doc.RootElement);
             }
