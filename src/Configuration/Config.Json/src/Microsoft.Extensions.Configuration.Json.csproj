@@ -17,6 +17,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Extensions.Configuration" />
     <Reference Include="Microsoft.Extensions.Configuration.FileExtensions" />
+    <Reference Include="Newtonsoft.Json" />
 
     <Reference Include="Microsoft.Bcl.Json.Sources" Condition="'$(TargetFramework)' == 'netstandard2.0'">
       <PrivateAssets>All</PrivateAssets>
