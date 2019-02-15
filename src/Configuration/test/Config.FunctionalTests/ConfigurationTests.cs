@@ -378,7 +378,7 @@ CommonKey3:CommonKey4=IniValue6";
                     .SetFileLoadExceptionHandler(jsonLoadError)
                     .Build();
             }
-            catch (FormatException e)
+            catch (Exception e)
             {
                 Assert.Equal(e, jsonError);
             }
@@ -405,7 +405,7 @@ CommonKey3:CommonKey4=IniValue6";
                     .SetFileLoadExceptionHandler(loadError)
                     .Build();
             }
-            catch (FormatException e)
+            catch (Exception e)
             {
                 Assert.Equal(e, error);
             }
@@ -820,7 +820,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        public void LoadIncorrectJsonFile_ThrowFormatException()
+        public void LoadIncorrectJsonFile_ThrowException()
         {
             var json = @"{
                 'name': 'test',
@@ -831,8 +831,8 @@ IniKey1=IniValue2");
             }";
             _fileSystem.WriteFile(_jsonFile, json);
 
-            var exception = Assert.Throws<FormatException>(() => CreateBuilder().AddJsonFile(_jsonFile).Build());
-            Assert.NotNull(exception.Message);
+            var exception = Assert.ThrowsAny<Exception>(() => CreateBuilder().AddJsonFile(_jsonFile).Build());
+            Assert.Contains("invalid start of a property name.", exception.Message);
         }
 
         [Fact]
