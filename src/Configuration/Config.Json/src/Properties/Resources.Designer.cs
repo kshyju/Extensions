@@ -33,12 +33,6 @@ namespace Microsoft.Extensions.Configuration.Json
         }
 
         /// <summary>
-        /// Could not parse the JSON file. Error on line number '{0}': '{1}'.
-        /// </summary>
-        internal static string FormatError_JSONParseError(object p0, object p1)
-            => string.Format(CultureInfo.CurrentCulture, GetString("Error_JSONParseError"), p0, p1);
-
-        /// <summary>
         /// A duplicate key '{0}' was found.
         /// </summary>
         internal static string Error_KeyIsDuplicated
