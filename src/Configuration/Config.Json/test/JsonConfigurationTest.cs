@@ -111,7 +111,7 @@ namespace Microsoft.Extensions.Configuration
                 }
             /* Missing a right brace here*/";
             var exception = Assert.Throws<FormatException>(() => LoadProvider(json));
-            Assert.Contains("", exception.Message);
+            Assert.Contains("Could not parse the JSON file.", exception.Message);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Microsoft.Extensions.Configuration
             ";
 
             var exception = Assert.Throws<FormatException>(() => LoadProvider(json));
-            Assert.Contains("There is an open JSON object or array that should be closed.", exception.Message);
+            Assert.Contains("Could not parse the JSON file.", exception.Message);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace Microsoft.Extensions.Configuration
         public void ThrowFormatExceptionWhenFileIsEmpty()
         {
             var exception = Assert.Throws<FormatException>(() => LoadProvider(@""));
-            Assert.Contains("", exception.Message);
+            Assert.Contains("Could not parse the JSON file.", exception.Message);
         }
     }
 }
