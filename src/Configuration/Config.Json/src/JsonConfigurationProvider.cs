@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 
 namespace Microsoft.Extensions.Configuration.Json
 {
@@ -23,6 +24,13 @@ namespace Microsoft.Extensions.Configuration.Json
         /// </summary>
         /// <param name="stream">The stream to read.</param>
         public override void Load(Stream stream)
-            => Data = JsonConfigurationFileParser.Parse(stream);
+        {
+            try {
+                Data = JsonConfigurationFileParser.Parse(stream);
+            } catch (JsonReaderException e)
+            {
+                throw new FormatException(Resources.Error_JSONParseError, e);
+            }
+        }
     }
 }
