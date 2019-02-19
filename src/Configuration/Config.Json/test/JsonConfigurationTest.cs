@@ -4,7 +4,6 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Text.Json;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Configuration.Test;
 using Xunit;
@@ -111,8 +110,8 @@ namespace Microsoft.Extensions.Configuration
                     ""zipcode"": ""12345""
                 }
             /* Missing a right brace here*/";
-            var exception = Assert.Throws<JsonReaderException>(() => LoadProvider(json));
-            Assert.NotNull(exception.Message);
+            var exception = Assert.Throws<FormatException>(() => LoadProvider(json));
+            Assert.Contains("", exception.Message);
         }
 
         [Fact]
@@ -123,7 +122,7 @@ namespace Microsoft.Extensions.Configuration
               ""Data"": {
             ";
 
-            var exception = Assert.Throws<JsonReaderException>(() => LoadProvider(json));
+            var exception = Assert.Throws<FormatException>(() => LoadProvider(json));
             Assert.Contains("There is an open JSON object or array that should be closed.", exception.Message);
         }
 
@@ -166,7 +165,8 @@ namespace Microsoft.Extensions.Configuration
         [Fact]
         public void ThrowFormatExceptionWhenFileIsEmpty()
         {
-            var exception = Assert.Throws<JsonReaderException>(() => LoadProvider(@""));
+            var exception = Assert.Throws<FormatException>(() => LoadProvider(@""));
+            Assert.Contains("", exception.Message);
         }
     }
 }
