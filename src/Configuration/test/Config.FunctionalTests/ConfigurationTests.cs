@@ -832,7 +832,7 @@ IniKey1=IniValue2");
             _fileSystem.WriteFile(_jsonFile, json);
 
             var exception = Assert.Throws<FormatException>(() => CreateBuilder().AddJsonFile(_jsonFile).Build());
-            Assert.Contains("invalid start of a property name.", exception.Message);
+            Assert.Contains("Could not parse the JSON file.", exception.Message);
         }
 
         [Fact]
