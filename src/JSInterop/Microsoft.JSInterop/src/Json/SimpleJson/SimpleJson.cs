@@ -88,12 +88,12 @@ namespace SimpleJson
  class JsonArray : List<object>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JsonArray"/> class. 
+        /// Initializes a new instance of the <see cref="JsonArray"/> class.
         /// </summary>
         public JsonArray() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JsonArray"/> class. 
+        /// Initializes a new instance of the <see cref="JsonArray"/> class.
         /// </summary>
         /// <param name="capacity">The capacity of the json array.</param>
         public JsonArray(int capacity) : base(capacity) { }
@@ -490,7 +490,7 @@ namespace SimpleJson
     /// <summary>
     /// This class encodes and decodes JSON strings.
     /// Spec. details, see http://www.json.org/
-    /// 
+    ///
     /// JSON uses Arrays and Objects. These correspond here to the datatypes JsonArray(IList&lt;object>) and JsonObject(IDictionary&lt;string,object>).
     /// All numbers are parsed to doubles.
     /// </summary>
@@ -1234,7 +1234,7 @@ namespace SimpleJson
 
 #endif
     }
-    
+
     [GeneratedCode("simple-json", "1.0.0")]
 #if SIMPLE_JSON_INTERNAL
     internal
@@ -1409,8 +1409,8 @@ namespace SimpleJson
 
 												return null;
                     }
-                  
-									if (type == typeof(string))  
+
+									if (type == typeof(string))
 										return str;
 
 									return Convert.ChangeType(str, type, CultureInfo.InvariantCulture);
@@ -1430,7 +1430,7 @@ namespace SimpleJson
             }
             else if (value is bool)
                 return value;
-            
+
             bool valueIsLong = value is long;
             bool valueIsDouble = value is double;
             if ((valueIsLong && type == typeof(long)) || (valueIsDouble && type == typeof(double)))
@@ -2117,12 +2117,21 @@ namespace SimpleJson
 
                 public bool ContainsKey(TKey key)
                 {
-                    return _dictionary.ContainsKey(key);
+                    lock (_lock)
+                    {
+                        return _dictionary.ContainsKey(key);
+                    }
                 }
 
                 public ICollection<TKey> Keys
                 {
-                    get { return _dictionary.Keys; }
+                    get
+                    {
+                        lock(_lock)
+                        {
+                            return _dictionary.Keys;
+                        }
+                    }
                 }
 
                 public bool Remove(TKey key)
@@ -2132,18 +2141,33 @@ namespace SimpleJson
 
                 public bool TryGetValue(TKey key, out TValue value)
                 {
-                    value = this[key];
-                    return true;
+                    lock (_lock)
+                    {
+                        value = this[key];
+                        return true;
+                    }
                 }
 
                 public ICollection<TValue> Values
                 {
-                    get { return _dictionary.Values; }
+                    get
+                    {
+                        lock(_lock)
+                        {
+                            return _dictionary.Values;
+                        }
+                    }
                 }
 
                 public TValue this[TKey key]
                 {
-                    get { return Get(key); }
+                    get
+                    {
+                        lock (_lock)
+                        {
+                            return Get(key);
+                        }
+                    }
                     set { throw new NotImplementedException(); }
                 }
 
@@ -2169,7 +2193,13 @@ namespace SimpleJson
 
                 public int Count
                 {
-                    get { return _dictionary.Count; }
+                    get
+                    {
+                        lock(_lock)
+                        {
+                            return _dictionary.Count;
+                        }
+                    }
                 }
 
                 public bool IsReadOnly
@@ -2184,12 +2214,18 @@ namespace SimpleJson
 
                 public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
                 {
-                    return _dictionary.GetEnumerator();
+                    lock (_lock)
+                    {
+                        return _dictionary.GetEnumerator();
+                    }
                 }
 
                 System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
                 {
-                    return _dictionary.GetEnumerator();
+                    lock (_lock)
+                    {
+                        return _dictionary.GetEnumerator();
+                    }
                 }
             }
 
