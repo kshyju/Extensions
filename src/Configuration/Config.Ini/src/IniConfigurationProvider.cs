@@ -42,10 +42,10 @@ namespace Microsoft.Extensions.Configuration.Ini
                 while (reader.Peek() != -1)
                 {
                     var rawLine = reader.ReadLine();
-                    var line = rawLine.Trim();
+                    var line = rawLine.AsSpan().Trim();
 
                     // Ignore blank lines
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (line.IsEmpty || line.IsWhiteSpace())
                     {
                         continue;
                     }
@@ -58,7 +58,7 @@ namespace Microsoft.Extensions.Configuration.Ini
                     if (line[0] == '[' && line[line.Length - 1] == ']')
                     {
                         // remove the brackets
-                        sectionPrefix = line.Substring(1, line.Length - 2) + ConfigurationPath.KeyDelimiter;
+                        sectionPrefix = line.Slice(1, line.Length - 2).ToString() + ConfigurationPath.KeyDelimiter;
                         continue;
                     }
 
@@ -69,21 +69,26 @@ namespace Microsoft.Extensions.Configuration.Ini
                         throw new FormatException(Resources.FormatError_UnrecognizedLineFormat(rawLine));
                     }
 
-                    string key = sectionPrefix + line.Substring(0, separator).Trim();
-                    string value = line.Substring(separator + 1).Trim();
-
-                    // Remove quotes
-                    if (value.Length > 1 && value[0] == '"' && value[value.Length - 1] == '"')
-                    {
-                        value = value.Substring(1, value.Length - 2);
-                    }
+                    var keySpan = line.Slice(0, separator).Trim();
+                    string key = sectionPrefix + keySpan.ToString();
 
                     if (data.ContainsKey(key))
                     {
                         throw new FormatException(Resources.FormatError_KeyIsDuplicated(key));
                     }
 
-                    data[key] = value;
+                    var valueSpan = line.Slice(separator + 1).Trim();
+
+                    // Remove quotes
+                    if (valueSpan.Length > 1 && valueSpan[0] == '"' && valueSpan[valueSpan.Length - 1] == '"')
+                    {
+                        var value = valueSpan.Slice(1, valueSpan.Length - 2);
+
+                        data[key] = value.ToString();
+                        continue;
+                    }
+
+                    data[key] = valueSpan.ToString();                    
                 }
             }
 
